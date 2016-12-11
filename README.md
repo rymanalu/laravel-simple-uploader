@@ -34,7 +34,7 @@ This package comes with two file providers, from HTTP request and local filesyst
 ```php
 Uploader::from('request')->upload('avatar'); // see the supported providers at config/uploader.php
 
-// Or you can use the magic method...
+// Or you can use the magic methods...
 Uploader::fromRequest()->upload('file');
 Uploader::fromLocal()->upload('/path/to/file');
 ```
@@ -57,9 +57,17 @@ use Illuminate\Http\Request;
 
 class UserController extends Controller
 {
+    /**
+     * Change user's avatar.
+     *
+     * @param  \Illuminate\Http\Request  $request
+     * @return \Illuminate\Http\Response
+     */
     public function changeAvatar(Request $request)
     {
         Uploader::upload('avatar');
+
+        //
     }
 }
 ```
