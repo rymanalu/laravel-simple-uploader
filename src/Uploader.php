@@ -6,7 +6,6 @@ use Closure;
 use RuntimeException;
 use BadMethodCallException;
 use Illuminate\Support\Str;
-use Illuminate\Contracts\Filesystem\Filesystem;
 use Rymanalu\LaravelSimpleUploader\Contracts\Provider;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemManager;
 use Rymanalu\LaravelSimpleUploader\Contracts\Uploader as UploaderContract;
