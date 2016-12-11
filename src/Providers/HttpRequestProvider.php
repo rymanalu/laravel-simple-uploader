@@ -11,7 +11,7 @@ class HttpRequestProvider implements Provider
     use FileSetter;
 
     /**
-     * The Http Request instance.
+     * The HTTP Request instance.
      *
      * @var \Illuminate\Http\Request
      */
