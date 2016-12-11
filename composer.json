@@ -1,0 +1,30 @@
+{
+    "name": "rymanalu/laravel-simple-uploader",
+    "description": "Simple file uploader for Laravel 5.",
+    "keywords": ["laravel", "upload"],
+    "type": "library",
+    "require": {
+        "php": ">=5.5.9",
+        "illuminate/http": "^5.0",
+        "illuminate/support": "^5.0",
+        "illuminate/contracts": "^5.0",
+        "illuminate/filesystem": "^5.0"
+    },
+    "require-dev": {
+        "mockery/mockery": "~0.9",
+        "phpunit/phpunit": "~4.8"
+    },
+    "license": "MIT",
+    "authors": [
+        {
+            "name": "Roni Yusuf Manalu",
+            "email": "rymanalu@gmail.com"
+        }
+    ],
+    "autoload": {
+        "psr-4": {
+            "Rymanalu\\LaravelSimpleUploader\\": "src/"
+        }
+    },
+    "homepage": "https://github.com/rymanalu/laravel-simple-uploader"
+}
