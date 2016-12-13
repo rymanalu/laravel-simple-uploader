@@ -58,11 +58,7 @@ class UploaderManager implements FactoryContract
     {
         $provider = $provider ?: $this->getDefaultProvider();
 
-        if (! isset($this->providers[$provider])) {
-            throw new InvalidArgumentException("File provider [{$provider}] is not defined.");
-        }
-
-        return $this->app->make(Uploader::class, [$this->app->make('filesystem'), $this->createProviderInstance($provider)]);
+        return new Uploader($this->app->make('filesystem'), $this->createProviderInstance($provider));
     }
 
     /**
@@ -83,6 +79,10 @@ class UploaderManager implements FactoryContract
      */
     protected function createProviderInstance($provider)
     {
+        if (! isset($this->providers[$provider])) {
+            throw new InvalidArgumentException("File provider [{$provider}] is not defined.");
+        }
+
         if (isset($this->resolvedProviders[$provider])) {
             return $this->resolvedProviders[$provider];
         }
