@@ -2,7 +2,7 @@
 
 [![Build Status](https://travis-ci.org/rymanalu/laravel-simple-uploader.svg?branch=master)](https://travis-ci.org/rymanalu/laravel-simple-uploader)
 
-Uploading files and store its in Filesystem / Cloud storage in Laravel 5 is not easy and simple for some developer. This package provides a simple way to do that, and comes with fluent interface that might you like.
+Uploading files and store its in Filesystem / Cloud storage in Laravel 5 is not easy and simple for some developers. This package provides a simple way to do that, and comes with fluent interface that might you like.
 
 ## Installation
 
@@ -90,7 +90,8 @@ Uploader::upload('/path/to/file', function ($filename) {
 ### Choosing the File Storage
 Automatically, the Uploader will use your default [Filesystem](https://laravel.com/docs/filesystem) Disk when storing the file. But, you can choose where you will store the file with `uploadTo` method:
 ```php
-Uploader::uploadTo('s3')->upload('avatar'); // see the supported uploadTo parameter at config/filesystems.php
+// see the supported uploadTo parameter at config/filesystems.php
+Uploader::uploadTo('s3')->upload('avatar');
 
 // Or you can use the magic methods...
 Uploader::uploadToS3();
@@ -110,9 +111,16 @@ Adjust the filename as you want with `renameTo` method:
 ```php
 Uploader::renameTo('my-awesome-videos')->upload('/path/to/video');
 ```
+If you ignore this method, the file will be renamed to random and unique name.
 
 ### File Visibility
 You may set the [file visibility](https://laravel.com/docs/filesystem#file-visibility) using the `setVisibility` method:
 ```php
 Uploader::setVisibility('public')->upload('avatar');
+```
+
+### Method Chainning
+All the methods above except the `upload` method, are chainable. Feel free to call other methods before calling the `upload`. Example:
+```php
+Uploader::from('local')->uploadToS3()->toFolder('banners')->renameTo('cool-banner')->setVisibility('public')->upload('/path/to/banner');
 ```
