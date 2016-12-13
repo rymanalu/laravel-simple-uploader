@@ -58,7 +58,7 @@ class UploaderManager implements FactoryContract
     {
         $provider = $provider ?: $this->getDefaultProvider();
 
-        return $this->app->make(Uploader::class, [$this->app->make('filesystem'), $this->createProviderInstance($provider)]);
+        return new Uploader($this->app->make('filesystem'), $this->createProviderInstance($provider));
     }
 
     /**
