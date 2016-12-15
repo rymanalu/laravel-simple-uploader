@@ -2,6 +2,7 @@
 
 use Mockery as m;
 use Rymanalu\LaravelSimpleUploader\Uploader;
+use Illuminate\Contracts\Config\Repository as Config;
 use Rymanalu\LaravelSimpleUploader\Contracts\Provider;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemManager;
 use Rymanalu\LaravelSimpleUploader\Contracts\Uploader as UploaderContract;
@@ -15,7 +16,7 @@ class UploaderTest extends PHPUnit_Framework_TestCase
 
     public function testSetFilesystemDisk()
     {
-        $uploader = $this->createUploaderInstance($this->mockFilesystemManager(), $this->mockProvider());
+        $uploader = $this->createUploaderInstance($this->mockConfig(), $this->mockFilesystemManager(), $this->mockProvider());
 
         $this->assertInstanceOf(UploaderContract::class, $uploader->uploadTo('s3'));
 
@@ -24,7 +25,7 @@ class UploaderTest extends PHPUnit_Framework_TestCase
 
     public function testSetFolder()
     {
-        $uploader = $this->createUploaderInstance($this->mockFilesystemManager(), $this->mockProvider());
+        $uploader = $this->createUploaderInstance($this->mockConfig(), $this->mockFilesystemManager(), $this->mockProvider());
 
         $this->assertInstanceOf(UploaderContract::class, $uploader->toFolder('folder'));
 
@@ -33,7 +34,7 @@ class UploaderTest extends PHPUnit_Framework_TestCase
 
     public function testRenameFile()
     {
-        $uploader = $this->createUploaderInstance($this->mockFilesystemManager(), $this->mockProvider());
+        $uploader = $this->createUploaderInstance($this->mockConfig(), $this->mockFilesystemManager(), $this->mockProvider());
 
         $this->assertEmpty($uploader->filename);
 
@@ -44,7 +45,7 @@ class UploaderTest extends PHPUnit_Framework_TestCase
 
     public function testSetVisibility()
     {
-        $uploader = $this->createUploaderInstance($this->mockFilesystemManager(), $this->mockProvider());
+        $uploader = $this->createUploaderInstance($this->mockConfig(), $this->mockFilesystemManager(), $this->mockProvider());
 
         $this->assertEmpty($uploader->visibility);
 
@@ -55,11 +56,16 @@ class UploaderTest extends PHPUnit_Framework_TestCase
 
     public function testDynamicUploadTo()
     {
-        $uploader = $this->createUploaderInstance($this->mockFilesystemManager(), $this->mockProvider());
+        $uploader = $this->createUploaderInstance($this->mockConfig(), $this->mockFilesystemManager(), $this->mockProvider());
 
         $this->assertInstanceOf(UploaderContract::class, $uploader->uploadToS3());
 
         $this->assertEquals('s3', $uploader->disk);
+    }
+
+    protected function mockConfig()
+    {
+        return m::mock(Config::class);
     }
 
     protected function mockProvider()
@@ -72,8 +78,8 @@ class UploaderTest extends PHPUnit_Framework_TestCase
         return m::mock(FilesystemManager::class);
     }
 
-    protected function createUploaderInstance(FilesystemManager $filesystem, Provider $provider)
+    protected function createUploaderInstance(Config $config, FilesystemManager $filesystem, Provider $provider)
     {
-        return new Uploader($filesystem, $provider);
+        return new Uploader($config, $filesystem, $provider);
     }
 }
