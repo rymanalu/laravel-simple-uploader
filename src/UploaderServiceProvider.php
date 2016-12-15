@@ -38,13 +38,9 @@ class UploaderServiceProvider extends ServiceProvider
             return new UploaderManager($app);
         });
 
-        $this->app->alias('uploader', 'Rymanalu\LaravelSimpleUploader\Contracts\Factory');
-
         $this->app->singleton('uploader.from', function ($app) {
             return $this->app['uploader']->from();
         });
-
-        $this->app->alias('uploader.from', 'Rymanalu\LaravelSimpleUploader\Contracts\Uploader');
     }
 
     /**
