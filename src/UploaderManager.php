@@ -51,8 +51,6 @@ class UploaderManager implements FactoryContract
      *
      * @param  string|null  $provider
      * @return \Rymanalu\LaravelSimpleUploader\Contracts\Uploader
-     *
-     * @throws \InvalidArgumentException
      */
     public function from($provider = null)
     {
@@ -78,6 +76,8 @@ class UploaderManager implements FactoryContract
      *
      * @param  string  $provider
      * @return \Rymanalu\LaravelSimpleUploader\Contracts\Provider
+     *
+     * @throws \InvalidArgumentException
      */
     protected function createProviderInstance($provider)
     {
