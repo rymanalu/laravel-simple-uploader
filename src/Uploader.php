@@ -184,7 +184,7 @@ class Uploader implements UploaderContract
         $this->provider->setFile($file);
 
         if (! $this->provider->isValid()) {
-            throw new RuntimeException("Given file [{$file}] is not valid.");
+            throw new RuntimeException("Given file [{$file}] is invalid.");
         }
 
         $filename = $this->getFullFileName($this->provider);

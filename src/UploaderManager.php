@@ -82,7 +82,7 @@ class UploaderManager implements FactoryContract
     protected function createProviderInstance($provider)
     {
         if (! isset($this->providers[$provider])) {
-            throw new InvalidArgumentException("File provider [{$provider}] is not defined.");
+            throw new InvalidArgumentException("File provider [{$provider}] is invalid.");
         }
 
         if (isset($this->resolvedProviders[$provider])) {
