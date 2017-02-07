@@ -6,6 +6,7 @@ use Closure;
 use RuntimeException;
 use BadMethodCallException;
 use Illuminate\Support\Str;
+use Illuminate\Contracts\Config\Repository as Config;
 use Rymanalu\LaravelSimpleUploader\Contracts\Provider;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemManager;
 use Rymanalu\LaravelSimpleUploader\Contracts\Uploader as UploaderContract;
@@ -41,6 +42,13 @@ class Uploader implements UploaderContract
     public $folder = '';
 
     /**
+     * The Config implementation.
+     *
+     * @var \Illuminate\Contracts\Config\Repository
+     */
+    protected $config;
+
+    /**
      * The file provider implementation.
      *
      * @var \Rymanalu\LaravelSimpleUploader\Contracts\Provider
@@ -57,14 +65,15 @@ class Uploader implements UploaderContract
     /**
      * Create a new Uploader instance.
      *
+     * @param  \Illuminate\Contracts\Config\Repository  $config
      * @param  \Illuminate\Contracts\Filesystem\Factory  $filesystem
      * @param  \Rymanalu\LaravelSimpleUploader\Contracts\Provider  $provider
      * @return void
      */
-    public function __construct(FilesystemManager $filesystem, Provider $provider)
+    public function __construct(Config $config, FilesystemManager $filesystem, Provider $provider)
     {
+        $this->config = $config;
         $this->provider = $provider;
-
         $this->filesystem = $filesystem;
     }
 
@@ -143,6 +152,26 @@ class Uploader implements UploaderContract
     }
 
     /**
+     * Get the file visibility.
+     *
+     * @return string
+     */
+    public function getVisibility()
+    {
+        return $this->visibility ?: $this->getDefaultVisibility();
+    }
+
+    /**
+     * Get the default file visibility.
+     *
+     * @return string
+     */
+    public function getDefaultVisibility()
+    {
+        return $this->config->get('uploader.visibility') ?: 'private';
+    }
+
+    /**
      * Upload the given file and returns the filename if succeed.
      *
      * @param  string  $file
@@ -155,12 +184,12 @@ class Uploader implements UploaderContract
         $this->provider->setFile($file);
 
         if (! $this->provider->isValid()) {
-            throw new RuntimeException("Given file [{$file}] is not valid.");
+            throw new RuntimeException("Given file [{$file}] is invalid.");
         }
 
         $filename = $this->getFullFileName($this->provider);
 
-        if ($this->filesystem->disk($this->disk)->put($filename, $this->provider->getContents(), $this->visibility)) {
+        if ($this->filesystem->disk($this->disk)->put($filename, $this->provider->getContents(), $this->getVisibility())) {
             return $filename;
         }
 

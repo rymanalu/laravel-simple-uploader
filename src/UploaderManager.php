@@ -51,14 +51,14 @@ class UploaderManager implements FactoryContract
      *
      * @param  string|null  $provider
      * @return \Rymanalu\LaravelSimpleUploader\Contracts\Uploader
-     *
-     * @throws \InvalidArgumentException
      */
     public function from($provider = null)
     {
         $provider = $provider ?: $this->getDefaultProvider();
 
-        return new Uploader($this->app->make('filesystem'), $this->createProviderInstance($provider));
+        return new Uploader(
+            $this->app->make('config'), $this->app->make('filesystem'), $this->createProviderInstance($provider)
+        );
     }
 
     /**
@@ -76,11 +76,13 @@ class UploaderManager implements FactoryContract
      *
      * @param  string  $provider
      * @return \Rymanalu\LaravelSimpleUploader\Contracts\Provider
+     *
+     * @throws \InvalidArgumentException
      */
     protected function createProviderInstance($provider)
     {
         if (! isset($this->providers[$provider])) {
-            throw new InvalidArgumentException("File provider [{$provider}] is not defined.");
+            throw new InvalidArgumentException("File provider [{$provider}] is invalid.");
         }
 
         if (isset($this->resolvedProviders[$provider])) {

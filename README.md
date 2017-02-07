@@ -1,8 +1,8 @@
 # Laravel 5 Simple Uploader
 
-[![Build Status](https://travis-ci.org/rymanalu/laravel-simple-uploader.svg?branch=master)](https://travis-ci.org/rymanalu/laravel-simple-uploader)
+[![Build Status](https://travis-ci.org/rymanalu/laravel-simple-uploader.svg?branch=1.0)](https://travis-ci.org/rymanalu/laravel-simple-uploader) [![Total Downloads](https://poser.pugx.org/rymanalu/laravel-simple-uploader/downloads)](https://packagist.org/packages/rymanalu/laravel-simple-uploader) [![Latest Stable Version](https://poser.pugx.org/rymanalu/laravel-simple-uploader/v/stable)](https://packagist.org/packages/rymanalu/laravel-simple-uploader) [![License](https://poser.pugx.org/rymanalu/laravel-simple-uploader/license)](https://packagist.org/packages/rymanalu/laravel-simple-uploader)
 
-Uploading files and store its in Filesystem / Cloud storage in Laravel 5 is not easy and simple for some developers. This package provides a simple way to do that, and comes with fluent interface that might you like.
+Uploading files and store its in Filesystem / Cloud storage in Laravel 5 is not easy and simple for some developers. This package provides a simple way to do that, and comes with fluent interface that you might like.
 
 ## Installation
 
@@ -27,7 +27,7 @@ php artisan vendor:publish --provider="Rymanalu\LaravelSimpleUploader\UploaderSe
 ```
 
 ## Configuration
-The Uploader configuration is located at `config/uploader.php`, where you can adjust the default file provider as you want.
+The Uploader configuration is located at `config/uploader.php`, where you can adjust the default file provider and the default file visibility as you want.
 
 ## File Providers
 This package comes with two file providers, from HTTP request and local filesystem. Before uploading a file, you can set where the file is provided. Example:
@@ -118,6 +118,7 @@ You may set the [file visibility](https://laravel.com/docs/filesystem#file-visib
 ```php
 Uploader::setVisibility('public')->upload('avatar');
 ```
+Or just ignore this, and the Uploader will set the visibility based on your configuration.
 
 ### Method Chainning
 All the methods above except the `upload` method, are chainable. Feel free to call other methods before calling the `upload`. Example:
