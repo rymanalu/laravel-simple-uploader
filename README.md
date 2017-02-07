@@ -1,6 +1,6 @@
 # Laravel 5 Simple Uploader
 
-[![Build Status](https://travis-ci.org/rymanalu/laravel-simple-uploader.svg?branch=1.0)](https://travis-ci.org/rymanalu/laravel-simple-uploader)
+[![Build Status](https://travis-ci.org/rymanalu/laravel-simple-uploader.svg?branch=1.0)](https://travis-ci.org/rymanalu/laravel-simple-uploader) [![Total Downloads](https://poser.pugx.org/rymanalu/laravel-simple-uploader/downloads)](https://packagist.org/packages/rymanalu/laravel-simple-uploader) [![Latest Stable Version](https://poser.pugx.org/rymanalu/laravel-simple-uploader/v/stable)](https://packagist.org/packages/rymanalu/laravel-simple-uploader) [![License](https://poser.pugx.org/rymanalu/laravel-simple-uploader/license)](https://packagist.org/packages/rymanalu/laravel-simple-uploader)
 
 Uploading files and store its in Filesystem / Cloud storage in Laravel 5 is not easy and simple for some developers. This package provides a simple way to do that, and comes with fluent interface that you might like.
 
