@@ -3,7 +3,6 @@
 namespace Rymanalu\LaravelSimpleUploader;
 
 use Closure;
-use RuntimeException;
 use BadMethodCallException;
 use Illuminate\Support\Str;
 use Illuminate\Contracts\Config\Repository as Config;
@@ -177,14 +176,14 @@ class Uploader implements UploaderContract
      * @param  string  $file
      * @return string|bool
      *
-     * @throws \RuntimeException
+     * @throws \Rymanalu\LaravelSimpleUploader\InvalidFileException
      */
     protected function runUpload($file)
     {
         $this->provider->setFile($file);
 
         if (! $this->provider->isValid()) {
-            throw new RuntimeException("Given file [{$file}] is invalid.");
+            throw new InvalidFileException("Given file [{$file}] is invalid.");
         }
 
         $filename = $this->getFullFileName($this->provider);
