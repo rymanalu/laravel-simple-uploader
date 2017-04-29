@@ -68,7 +68,7 @@ class UploaderManager implements FactoryContract
      */
     public function getDefaultProvider()
     {
-        return $this->app->make('config')['uploader.default'];
+        return $this->app->make('config')->get('uploader.default');
     }
 
     /**
