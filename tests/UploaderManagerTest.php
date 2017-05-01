@@ -1,6 +1,7 @@
 <?php
 
 use Mockery as m;
+use Illuminate\Support\Arr;
 use Illuminate\Contracts\Container\Container;
 use Rymanalu\LaravelSimpleUploader\UploaderManager;
 use Rymanalu\LaravelSimpleUploader\Contracts\Provider;
@@ -8,6 +9,7 @@ use Rymanalu\LaravelSimpleUploader\Providers\LocalProvider;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemManagerContract;
+use Rymanalu\LaravelSimpleUploader\Contracts\Uploader as UploaderContract;
 
 class UploaderManagerTest extends PHPUnit_Framework_TestCase
 {
@@ -18,10 +20,7 @@ class UploaderManagerTest extends PHPUnit_Framework_TestCase
 
     public function testCreateUploaderInstanceByResolvingTheRequiredInstanceFromContainer()
     {
-        $config = new Config([
-            'local' => m::mock(Provider::class),
-            'request' => m::mock(Provider::class),
-        ]);
+        $config = new Config(['local' => m::mock(Provider::class)]);
 
         $app = m::mock(Container::class);
         $app->shouldReceive('make')->with('config')->andReturn($config);
@@ -29,7 +28,7 @@ class UploaderManagerTest extends PHPUnit_Framework_TestCase
         $app->shouldReceive('make')->with(LocalProvider::class)->andReturn($config->get('local'));
 
         $uploaderManager = new UploaderManager($app);
-        $uploaderManager->from('local');
+        $this->assertInstanceOf(UploaderContract::class, $uploaderManager->from('local'));
     }
 }
 
@@ -50,7 +49,7 @@ class Config implements ConfigContract
     public function get($key, $default = null)
     {
         if ($this->has($key)) {
-            return $this->items[$key];
+            return Arr::get($this->items, $key, $default);
         }
 
         return $default;
