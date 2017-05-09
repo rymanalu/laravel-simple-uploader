@@ -2,6 +2,7 @@
 
 namespace Rymanalu\LaravelSimpleUploader;
 
+use Closure;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Contracts\Container\Container;
@@ -29,6 +30,13 @@ class UploaderManager implements FactoryContract
     ];
 
     /**
+     * The array of file custom providers.
+     *
+     * @var array
+     */
+    protected $customProviders = [];
+
+    /**
      * The array of resolved file providers.
      *
      * @var array
@@ -44,6 +52,24 @@ class UploaderManager implements FactoryContract
     public function __construct(Container $app)
     {
         $this->app = $app;
+    }
+
+    /**
+     * Register a custom file provider Closure.
+     *
+     * @param  string  $provider
+     * @param  \Closure  $callback
+     * @return \Rymanalu\LaravelSimpleUploader\Contracts\Factory
+     */
+    public function extend($provider, Closure $callback)
+    {
+        if ($this->isProviderAliasExists($provider)) {
+            throw new InvalidArgumentException("Alias provider is already reserved [{$provider}]");
+        }
+
+        $this->customProviders[$provider] = $callback;
+
+        return $this;
     }
 
     /**
@@ -81,15 +107,28 @@ class UploaderManager implements FactoryContract
      */
     protected function createProviderInstance($provider)
     {
-        if (! isset($this->providers[$provider])) {
+        if (! $this->isProviderAliasExists($provider)) {
             throw new InvalidArgumentException("File provider [{$provider}] is invalid.");
         }
 
-        if (isset($this->resolvedProviders[$provider])) {
-            return $this->resolvedProviders[$provider];
+        if (! isset($this->resolvedProviders[$provider])) {
+            $this->resolvedProviders[$provider] = isset($this->customProviders[$provider])
+                ? $this->callCustomProvider($provider)
+                : $this->app->make($this->providers[$provider]);
         }
 
-        return $this->resolvedProviders[$provider] = $this->app->make($this->providers[$provider]);
+        return $this->resolvedProviders[$provider];
+    }
+
+    /**
+     * Call a custom file provider.
+     *
+     * @param  string  $provider
+     * @return \Rymanalu\LaravelSimpleUploader\Contracts\Provider
+     */
+    protected function callCustomProvider($provider)
+    {
+        return $this->customProviders[$provider]($this->app);
     }
 
     /**
@@ -103,6 +142,17 @@ class UploaderManager implements FactoryContract
         $provider = Str::snake(substr($from, 4));
 
         return $this->from($provider);
+    }
+
+    /**
+     * Determine if the given provider alias is already exists in the default and custom providers array.
+     *
+     * @param  string  $provider
+     * @return bool
+     */
+    protected function isProviderAliasExists($provider)
+    {
+        return array_key_exists($provider, $this->providers) || array_key_exists($provider, $this->customProviders);
     }
 
     /**

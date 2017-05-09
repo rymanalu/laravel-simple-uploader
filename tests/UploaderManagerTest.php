@@ -18,6 +18,21 @@ class UploaderManagerTest extends PHPUnit_Framework_TestCase
         m::close();
     }
 
+    /**
+     * @expectedException InvalidArgumentException
+     */
+    public function testInvalidArgumentExceptionThrownWhenProviderIsInvalid()
+    {
+        $config = new Config(['local' => m::mock(Provider::class)]);
+
+        $app = m::mock(Container::class);
+        $app->shouldReceive('make')->with('config')->andReturn($config);
+        $app->shouldReceive('make')->with('filesystem')->andReturn(new FilesystemManager);
+
+        $uploaderManager = new UploaderManager($app);
+        $uploaderManager->from('foo');
+    }
+
     public function testCreateUploaderInstanceByResolvingTheRequiredInstanceFromContainer()
     {
         $config = new Config(['local' => m::mock(Provider::class)]);
