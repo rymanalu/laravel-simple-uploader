@@ -125,3 +125,66 @@ All the methods above except the `upload` method, are chainable. Feel free to ca
 ```php
 Uploader::from('local')->uploadToS3()->toFolder('banners')->renameTo('cool-banner')->setVisibility('public')->upload('/path/to/banner');
 ```
+
+## Adding Custom File Provider
+### Implementing The Provider
+Your custom file provider should implement the `Rymanalu\LaravelSimpleUploader\Contracts\Provider`. This interface contains just a few simple methods we need to implement. A stubbed Google Drive implementation looks something like this:
+
+```php
+<?php
+
+// You are free to place the providers anywhere you like...
+namespace App\Uploader\Providers;
+
+// Check this interface to see all the docblock for each method...
+use Rymanalu\LaravelSimpleUploader\Contracts\Provider;
+
+class GoogleDrive implements Provider
+{
+    public function isValid() {}
+    public function getContents() {}
+    public function getExtension() {}
+    public function setFile($file) {} // Or you can use Rymanalu\LaravelSimpleUploader\Support\FileSetter trait to implement this method...
+}
+```
+
+### Registering The Provider
+Once your provider has been implemented, you are ready to register it with the `UploaderManager`. To add additional drivers to the manager, you may use the `extend` method on the `Uploader` facade. You should call the `extend` method from the boot method of a service provider. You may do this from the existing `AppServiceProvider` or create an entirely new provider:
+
+```php
+<?php
+
+namespace App\Providers;
+
+use App\Uploader\Providers\GoogleDrive;
+use Illuminate\Support\ServiceProvider;
+use Rymanalu\LaravelSimpleUploader\Support\Uploader; // Or just "use Uploader;" if you register the facade in the aliases array in "config/app.php" before...
+
+class UploaderServiceProvider extends ServiceProvider
+{
+    /**
+     * Perform post-registration booting of services.
+     *
+     * @return void
+     */
+    public function boot()
+    {
+        Uploader::extend('gdrive', function ($app) {
+            // Return implementation of Rymanalu\LaravelSimpleUploader\Contracts\Provider...
+            return new GoogleDrive;
+        });
+    }
+
+    /**
+     * Register bindings in the container.
+     *
+     * @return void
+     */
+    public function register()
+    {
+        //
+    }
+}
+```
+
+Once the provider driver has been registered, you may use the `gdrive` driver in your `config/uploader.php` configuration file.
