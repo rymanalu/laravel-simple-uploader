@@ -1,5 +1,11 @@
 # Changelog
 
+## v1.1.0 (2017-05-10)
+
+### Added
+
+- Added `extend` method
+
 ## v1.0.4 (2017-01-31)
 
 ### Changed
