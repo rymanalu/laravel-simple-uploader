@@ -60,6 +60,7 @@ class UploaderManager implements FactoryContract
      * @param  string  $provider
      * @param  \Closure  $callback
      * @return \Rymanalu\LaravelSimpleUploader\Contracts\Factory
+     * @throws \InvalidArgumentException
      */
     public function extend($provider, Closure $callback)
     {

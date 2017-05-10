@@ -8,6 +8,7 @@ use Rymanalu\LaravelSimpleUploader\Contracts\Provider;
 use Rymanalu\LaravelSimpleUploader\Providers\LocalProvider;
 use Illuminate\Contracts\Config\Repository as ConfigContract;
 use Illuminate\Contracts\Filesystem\Filesystem as FilesystemContract;
+use Rymanalu\LaravelSimpleUploader\Contracts\Factory as FactoryContract;
 use Illuminate\Contracts\Filesystem\Factory as FilesystemManagerContract;
 use Rymanalu\LaravelSimpleUploader\Contracts\Uploader as UploaderContract;
 
@@ -44,6 +45,25 @@ class UploaderManagerTest extends PHPUnit_Framework_TestCase
 
         $uploaderManager = new UploaderManager($app);
         $this->assertInstanceOf(UploaderContract::class, $uploaderManager->from('local'));
+    }
+
+    public function testExtendProvider()
+    {
+        $config = new Config;
+
+        $app = m::mock(Container::class);
+        $app->shouldReceive('make')->with('config')->andReturn($config);
+        $app->shouldReceive('make')->with('filesystem')->andReturn(new FilesystemManager);
+
+        $uploader = new UploaderManager($app);
+
+        $this->assertInstanceOf(FactoryContract::class, $uploader->extend('foo', function ($app) {
+            $this->assertInstanceOf(Container::class, $app);
+
+            return m::mock(Provider::class);
+        }));
+
+        $this->assertInstanceOf(UploaderContract::class, $uploader->from('foo'));
     }
 }
 
