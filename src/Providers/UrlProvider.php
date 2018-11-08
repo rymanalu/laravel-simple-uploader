@@ -6,18 +6,20 @@ use Rymanalu\LaravelSimpleUploader\Contracts\Provider;
 use Rymanalu\LaravelSimpleUploader\Support\FileSetter;
 use Rymanalu\LaravelSimpleUploader\Support\FileExtensionPathInfo;
 
-class LocalProvider implements Provider
+class UrlProvider implements Provider
 {
     use FileExtensionPathInfo, FileSetter;
 
     /**
-     * Returns whether the file is valid.
+     * Returns whether the url is valid.
      *
      * @return bool
      */
     public function isValid()
     {
-        return file_exists($this->file);
+        $fileHeaders = @get_headers($this->file);
+
+        return $fileHeaders && $fileHeaders[0] !== 'HTTP/1.1 404 Not Found';
     }
 
     /**
