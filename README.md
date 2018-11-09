@@ -37,6 +37,7 @@ Uploader::from('request')->upload('avatar'); // see the supported providers at c
 // Or you can use the magic methods...
 Uploader::fromRequest()->upload('file');
 Uploader::fromLocal()->upload('/path/to/file');
+Uploader::fromUrl()->upload('https://via.placeholder.com/150.png');
 ```
 If you call method on the `Uploader` facade without first calling the `from` method, the uploader will assume that you want to use the default provider.
 ```php
