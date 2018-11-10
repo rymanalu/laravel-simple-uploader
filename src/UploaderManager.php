@@ -6,6 +6,7 @@ use Closure;
 use Illuminate\Support\Str;
 use InvalidArgumentException;
 use Illuminate\Contracts\Container\Container;
+use Rymanalu\LaravelSimpleUploader\Providers\UrlProvider;
 use Rymanalu\LaravelSimpleUploader\Providers\LocalProvider;
 use Rymanalu\LaravelSimpleUploader\Providers\HttpRequestProvider;
 use Rymanalu\LaravelSimpleUploader\Contracts\Factory as FactoryContract;
@@ -27,6 +28,7 @@ class UploaderManager implements FactoryContract
     protected $providers = [
         'local' => LocalProvider::class,
         'request' => HttpRequestProvider::class,
+        'url' => UrlProvider::class,
     ];
 
     /**
